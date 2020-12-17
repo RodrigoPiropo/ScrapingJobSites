@@ -31,17 +31,30 @@ class Content:
 
 class Search:
 
-    def __init__(self, keyword, location):
+    def __init__(self, keyword, location, pages=""):
         self.keyword = keyword
         self.location = location
+        self.pages = pages
 
     def get(self, website):
+        pageslink = []
+        if isinstance(self.pages, list):
+            for page in self.pages:
+                try:
+                    req = requests.get(website.search_url.format(
+                                       self.keyword, self.location, page))
+                except requests.exceptions.RequestException:
+                    pageslink.append(None)
+
+                pageslink.append(BeautifulSoup(req.text, "html.parser"))
+            return pageslink
         try:
             req = requests.get(
             website.search_url.format(self.keyword, self.location))
+            pageslink.append(BeautifulSoup(req.text, "html.parser"))
         except requests.exceptions.RequestException:
-            return None
-        return BeautifulSoup(req.text, "html.parser")
+            pageslink.append(None)
+        return pageslink
 
 
     def safeget(self, pageObj, selector):
@@ -56,21 +69,25 @@ class Search:
         companies = []
         links = []
         salaries = []
+        contents = []
 
         soup = self.get(website)
-        results = soup.select(website.result_list)
-        for div in results:
-            titles.append(self.safeget(div, website.title))
-            companies.append(self.safeget(div, website.company))
-            salaries.append(self.safeget(div, website.salary))
+        for s in soup:
+            results = s.select(website.result_list)
+            for div in results:
+                titles.append(self.safeget(div, website.title))
+                companies.append(self.safeget(div, website.company))
+                salaries.append(self.safeget(div, website.salary))
 
-            if website.absolute_url == False:
-                links.append(website.url + div.select(website.linkjob)[0]["href"])
-            else:
-                links.append(div.select(website.linkjob)[0]["href"])
+                if website.absolute_url == False:
+                    links.append(website.url + div.select(website.linkjob)[0]["href"])
+                else:
+                    links.append(div.select(website.linkjob)[0]["href"])
 
-        content = Content(titles, companies, links, salaries)
-        return content
+            content = Content(titles, companies, links, salaries)
+            contents.append(content)
+
+        return contents
 
 sites = [
 ["https://br.indeed.com", "https://br.indeed.com/empregos?q={}&l={}",
@@ -83,5 +100,6 @@ for site in sites:
     websites.append(WebSite(site[0], site[1], site[2], site[3],
                             site[4], site[5], site[6], site[7]))
 
-content = Search("Python", "São Paulo").parse(websites[0])
-print(content.dict())
+contents = Search("Python", "São Paulo").parse(websites[0])
+for content in contents:
+    print(content.dict())
