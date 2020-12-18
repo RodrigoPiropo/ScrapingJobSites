@@ -1,7 +1,7 @@
 from scraper import WebSite, Search
 
 sites = [
-["https://br.indeed.com", "https://br.indeed.com/empregos?q={}&l={}",
+["https://br.indeed.com", "https://br.indeed.com/empregos?q={}&l={}&start={}",
  "div.jobsearch-SerpJobCard", "a", False, "h2.title a", "span.company",
   "span.salaryText"]
 ]

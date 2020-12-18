@@ -50,7 +50,7 @@ class Search:
             return pageslink
         try:
             req = requests.get(
-            website.search_url.format(self.keyword, self.location))
+            website.search_url.format(self.keyword, self.location, self.pages))
             pageslink.append(BeautifulSoup(req.text, "html.parser"))
         except requests.exceptions.RequestException:
             pageslink.append(None)
