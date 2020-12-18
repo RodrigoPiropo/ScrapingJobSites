@@ -15,6 +15,7 @@ class WebSite:
         self.salary = salary
 
 class Content:
+
     def __init__(self, title, company, linkjob, salary):
         self.title = title
         self.company = company
@@ -56,11 +57,13 @@ class Search:
             pageslink.append(None)
         return pageslink
 
-
     def safeget(self, pageObj, selector):
-        childObj = pageObj.select(selector)
-        if childObj is not None and len(childObj) > 0:
-            return childObj[0].get_text().replace("\n", "")
+        if selector != "":
+            childObj = pageObj.select(selector)
+            if childObj is not None and len(childObj) > 0:
+                return childObj[0].get_text().replace("\n", "")
+            else:
+                return "NA"
         else:
             return "NA"
 
