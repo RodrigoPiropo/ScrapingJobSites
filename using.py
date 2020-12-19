@@ -7,7 +7,11 @@ sites = [
 ["https://www.catho.com.br",
  "https://www.catho.com.br/vagas/&q={}&cidade={}",
  "article.Card__CardWrapper-om5cci-0",
- "a", True, "a", "", "div:nth-child(1) > div:nth-child(2) > div:nth-child(1)"]
+ "a", True, "a", "", "div:nth-child(1) > div:nth-child(2) > div:nth-child(1)"],
+ ["https://www.monster.com",
+  "https://www.monster.com/jobs/search/?q={}&where={}&page={}",
+  "section.card-content",
+  "a", True, "h2.title a", "div.company span", ""]
  ]
 
 websites = []

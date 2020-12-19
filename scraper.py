@@ -83,9 +83,15 @@ class Search:
                 salaries.append(self.safeget(div, website.salary))
 
                 if website.absolute_url == False:
-                    links.append(website.url + div.select(website.linkjob)[0]["href"])
+                    if len(div.select(website.linkjob)) > 0:
+                        links.append(website.url + div.select(website.linkjob)[0]["href"])
+                    else:
+                        links.append("NA")
                 else:
-                    links.append(div.select(website.linkjob)[0]["href"])
+                    if len(div.select(website.linkjob)) > 0:
+                        links.append(div.select(website.linkjob)[0]["href"])
+                    else:
+                        links.append("NA")
 
             content = Content(titles, companies, links, salaries)
             contents.append(content)
