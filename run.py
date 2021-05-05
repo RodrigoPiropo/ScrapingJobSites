@@ -1,4 +1,7 @@
 from scraper import WebSite, Search
+import sys
+
+args = sys.argv[1:]
 
 sites = [
 ["https://br.indeed.com", "https://br.indeed.com/empregos?q={}&l={}",
@@ -19,7 +22,14 @@ for site in sites:
     websites.append(WebSite(site[0], site[1], site[2], site[3],
                             site[4], site[5], site[6], site[7]))
 
-for website in websites:
-    contents = Search("Python", "São Paulo").parse(website)
-    for content in contents:
-        print(content.dict())
+linguagem, cidade = ["Python", "São Paulo"] if (len(args) != 2) else args
+
+if (args and len(args) != 2):
+    print(f'Usage: python {sys.argv[0]} [language] [city]')
+    print(f'Defaults -> language: {linguagem}, city: {cidade}.\n')
+else:
+    for website in websites:
+        contents = Search(linguagem, cidade).parse(website)
+        for content in contents:
+            print(content.dict())
+
