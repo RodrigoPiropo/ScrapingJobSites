@@ -76,22 +76,23 @@ class Search:
 
         soup = self.get(website)
         for s in soup:
-            results = s.select(website.result_list)
-            for div in results:
-                titles.append(self.safeget(div, website.title))
-                companies.append(self.safeget(div, website.company))
-                salaries.append(self.safeget(div, website.salary))
+            if (s is not None):
+                results = s.select(website.result_list)
+                for div in results:
+                    titles.append(self.safeget(div, website.title))
+                    companies.append(self.safeget(div, website.company))
+                    salaries.append(self.safeget(div, website.salary))
 
-                if website.absolute_url == False:
-                    if len(div.select(website.linkjob)) > 0:
-                        links.append(website.url + div.select(website.linkjob)[0]["href"])
+                    if website.absolute_url == False:
+                        if len(div.select(website.linkjob)) > 0:
+                            links.append(website.url + div.select(website.linkjob)[0]["href"])
+                        else:
+                            links.append("NA")
                     else:
-                        links.append("NA")
-                else:
-                    if len(div.select(website.linkjob)) > 0:
-                        links.append(div.select(website.linkjob)[0]["href"])
-                    else:
-                        links.append("NA")
+                        if len(div.select(website.linkjob)) > 0:
+                            links.append(div.select(website.linkjob)[0]["href"])
+                        else:
+                            links.append("NA")
 
             content = Content(titles, companies, links, salaries)
             contents.append(content)
